@@ -1,4 +1,210 @@
-// databasehandler.cpp
+#include "databasehandler.h"
+
+DatabaseHandler::DatabaseHandler() {
+    m_db = QSqlDatabase::addDatabase("QSQLITE");
+    m_db.setDatabaseName("gestionMedicale.db"); // Le fichier sera créé à la racine du projet
+}
+
+DatabaseHandler& DatabaseHandler::instance() {
+    static DatabaseHandler instance;
+    return instance;
+}
+
+bool DatabaseHandler::openDatabase() {
+    if (!m_db.open()) {
+        qCritical() << "Échec de la connexion à la base de données:" << m_db.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+void DatabaseHandler::closeDatabase() {
+    if (m_db.isOpen())
+        m_db.close();
+}
+
+bool DatabaseHandler::initializeDatabase() {
+    if (!openDatabase())
+        return false;
+
+    QSqlQuery query;
+
+    QStringList creationQueries = {
+        R"(
+        CREATE TABLE IF NOT EXISTS patients (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nom TEXT NOT NULL,
+            postnom TEXT,
+            prenom TEXT NOT NULL,
+            date_naissance DATE NOT NULL,
+            lieu_naissance TEXT,
+            sexe TEXT CHECK(sexe IN ('Masculin', 'Féminin')),
+            etat_civil TEXT,
+            adresse TEXT,
+            profession TEXT
+        ))",
+
+        R"(
+        CREATE TABLE IF NOT EXISTS employes (
+            matricule TEXT PRIMARY KEY,
+            nom TEXT NOT NULL,
+            postnom TEXT,
+            prenom TEXT NOT NULL,
+            date_naissance DATE,
+            lieu_naissance TEXT,
+            sexe TEXT CHECK(sexe IN ('Masculin', 'Féminin')),
+            etat_civil TEXT,
+            adresse TEXT,
+            fonction TEXT CHECK(fonction IN ('Médecin', 'Infirmier', 'Administrateur', 'Réceptionniste')),
+            service TEXT
+        ))",
+
+        R"(
+        CREATE TABLE IF NOT EXISTS consultations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_medecin TEXT NOT NULL,
+            id_patient INTEGER NOT NULL,
+            maladie TEXT,
+            date_consultation DATE NOT NULL,
+            symptome TEXT,
+            diagnostic TEXT,
+            plainte TEXT,
+            prescription TEXT,
+            email TEXT NOT NULL UNIQUE,
+            mot_de_passe TEXT NOT NULL,
+            FOREIGN KEY(id_medecin) REFERENCES employes(matricule),
+            FOREIGN KEY(id_patient) REFERENCES patients(id)
+        ))",
+
+        R"(
+        CREATE TABLE IF NOT EXISTS paiements (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_patient INTEGER NOT NULL,
+            montant REAL NOT NULL,
+            date_paiement DATE NOT NULL,
+            mode_paiement TEXT CHECK(mode_paiement IN ('Espèces', 'Carte bancaire')),
+            FOREIGN KEY(id_patient) REFERENCES patients(id)
+        ))",
+
+        R"(
+        CREATE TABLE IF NOT EXISTS historique (
+            id_historique INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_employe TEXT NOT NULL,
+            description TEXT NOT NULL,
+            date_action DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(id_employe) REFERENCES employes(matricule)
+        ))"
+    };
+
+    for (const QString &sql : creationQueries) {
+        if (!query.exec(sql)) {
+            qWarning() << "Erreur de création de table:" << query.lastError().text();
+            return false;
+        }
+    }
+
+    qDebug() << "Base de données initialisée avec succès.";
+    return true;
+}
+
+// Fonction de mise à jour d'enregistrement (ex: mot de passe)
+bool DatabaseHandler::updateRecord(const QString &table, const QVariantMap &data, const QString &condition) {
+    if (!m_db.isOpen()) {
+        qWarning() << "Base de données non ouverte.";
+        return false;
+    }
+
+    QStringList setClauses;
+    QVariantList values;
+    for (auto it = data.begin(); it != data.end(); ++it) {
+        setClauses.append(it.key() + " = ?");
+        values.append(it.value());
+    }
+
+    QString queryStr = QString("UPDATE %1 SET %2 WHERE %3").arg(table).arg(setClauses.join(", ")).arg(condition);
+    QSqlQuery query(m_db);
+    query.prepare(queryStr);
+
+    for (int i = 0; i < values.size(); ++i) {
+        query.addBindValue(values[i]);
+    }
+
+    if (!query.exec()) {
+        qWarning() << "Erreur lors de la mise à jour :" << query.lastError();
+        return false;
+    }
+
+    return true;
+}
+
+// Fonction de génération de matricule unique
+QString DatabaseHandler::generateUniqueMatricule(const QString &fonction) {
+    QString prefix;
+
+    if (fonction == "Médecin") {
+        prefix = "MED";
+    } else if (fonction == "Infirmier") {
+        prefix = "INF";
+    } else if (fonction == "Administrateur") {
+        prefix = "ADM";
+    } else if (fonction == "Réceptionniste") {
+        prefix = "REC";
+    } else {
+        qWarning() << "Fonction inconnue, impossible de générer un matricule.";
+        return QString();
+    }
+
+    QSqlQuery query(m_db);
+    query.prepare("SELECT COUNT(*) FROM employes WHERE fonction = :fonction");
+    query.bindValue(":fonction", fonction);
+
+    if (!query.exec() || !query.next()) {
+        qWarning() << "Erreur lors de la récupération du nombre d'employés :" << query.lastError();
+        return QString();
+    }
+
+    int count = query.value(0).toInt() + 1;
+    QString matricule = QString("%1%2").arg(prefix).arg(count, 4, 10, QChar('0')); // Ex: MED0001
+
+    return matricule;
+}
+
+// Fonction d'ajout d'un employé (champs de base uniquement pour l’instant)
+bool DatabaseHandler::ajouterEmploye(const QString& nom, const QString& postnom, const QString& prenom, const QString& fonction) {
+    QString matricule = generateUniqueMatricule(fonction);
+    if (matricule.isEmpty()) {
+        return false;
+    }
+
+    QSqlQuery query(m_db);
+    query.prepare("INSERT INTO employes (matricule, nom, postnom, prenom, fonction) "
+                  "VALUES (:matricule, :nom, :postnom, :prenom, :fonction)");
+    query.bindValue(":matricule", matricule);
+    query.bindValue(":nom", nom);
+    query.bindValue(":postnom", postnom);
+    query.bindValue(":prenom", prenom);
+    query.bindValue(":fonction", fonction);
+
+    if (!query.exec()) {
+        qWarning() << "Erreur lors de l'ajout de l'employé:" << query.lastError();
+        return false;
+    }
+
+    qDebug() << "Employé ajouté avec matricule:" << matricule;
+    return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
 #include "databasehandler.h"
 #include <QSqlRecord>
 #include <QCoreApplication>
@@ -222,3 +428,4 @@ QVariantMap DatabaseHandler::getRecord(const QString &table, const QString &wher
 
     return record;
 }
+*/

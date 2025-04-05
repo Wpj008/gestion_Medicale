@@ -1,7 +1,93 @@
-// databasehandler.h
 #ifndef DATABASEHANDLER_H
 #define DATABASEHANDLER_H
 
+#include <QObject>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QVariantMap>
+#include <QDebug>
+
+class DatabaseHandler : public QObject
+{
+    Q_OBJECT
+public:
+    explicit DatabaseHandler(QObject *parent = nullptr);
+    ~DatabaseHandler();
+
+    static DatabaseHandler& instance();
+
+    bool initializeDatabase();
+    bool openDatabase();     // ajout manquant
+    void closeDatabase();    // ajout manquant
+
+    bool updateRecord(const QString &table, const QVariantMap &data, const QString &condition);
+    QString generateUniqueMatricule(const QString &fonction);
+    bool ajouterEmploye(const QString &nom, const QString &postnom, const QString &prenom, const QString &fonction); // ajout manquant
+
+private:
+    QSqlDatabase m_db;
+};
+
+#endif // DATABASEHANDLER_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+#ifndef DATABASEHANDLER_H
+#define DATABASEHANDLER_H
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -38,3 +124,4 @@ private:
 };
 
 #endif // DATABASEHANDLER_H
+*/
