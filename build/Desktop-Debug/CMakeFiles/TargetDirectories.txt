@@ -1,5 +1,0 @@
-/home/aganze/workspace/fac/projet_c++/GestionDossiersMedicaux/build/Desktop-Debug/CMakeFiles/GestionDossiersMedicaux.dir
-/home/aganze/workspace/fac/projet_c++/GestionDossiersMedicaux/build/Desktop-Debug/CMakeFiles/edit_cache.dir
-/home/aganze/workspace/fac/projet_c++/GestionDossiersMedicaux/build/Desktop-Debug/CMakeFiles/rebuild_cache.dir
-/home/aganze/workspace/fac/projet_c++/GestionDossiersMedicaux/build/Desktop-Debug/CMakeFiles/GestionDossiersMedicaux_autogen_timestamp_deps.dir
-/home/aganze/workspace/fac/projet_c++/GestionDossiersMedicaux/build/Desktop-Debug/CMakeFiles/GestionDossiersMedicaux_autogen.dir
