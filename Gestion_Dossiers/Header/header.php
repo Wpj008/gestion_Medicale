@@ -9,7 +9,7 @@
     <nav class="sidebar-nav">
       <ul class="nav-list primary-nav">
         <li class="nav-item">
-          <a href="index.php" class="nav-link">
+          <a href="accueil.php" class="nav-link">
             <span class="icon material-symbols-rounded">dashboard</span>
             <span class="nav-label">Dashboard</span>
           </a>
@@ -101,7 +101,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link">
+          <a href="logout.php" class="nav-link">
             <span class="material-symbols-rounded">logout</span>
             <span class="nav-label">Se déconnecter</span>
           </a>

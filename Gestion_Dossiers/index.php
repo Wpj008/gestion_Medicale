@@ -1,119 +1,92 @@
+<?php 
+include 'Configuration/config.php';
+
+
+$errormessage = "";
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST"  && isset($_POST['submit'])) {
+
+    
+    $email = $_POST['username'];
+    
+    $password = htmlspecialchars($_POST['password']);
+    
+    
+    //recupère tous les infos users
+
+    $query = $pdo->prepare("SELECT * FROM agent WHERE  AdresseMail = :AdresseMail" );
+       
+    $query->bindParam(':AdresseMail', $email);
+    $query->execute();
+     
+    
+    $results = $query->fetch(); 
+
+ 
+    //verifie si le mdp saisi === mdp  dans la bdd
+
+    if($results){
+
+        session_start();
+        $_SESSION['id_agent'] = $results['id_agent'];
+        $_SESSION['nom'] = $results['nom'];
+        $_SESSION['postnom'] = $results['postnom'];
+        $_SESSION['prenom'] = $results['prenom'];
+        $_SESSION['AdresseMail'] = $results['AdresseMail'];
+        $_SESSION['id_specialite'] = $results['id_specialite'];
+        $_SESSION['id_fonction'] = $results['id_fonction'];
+        
+        //pour verifier dans les autres pages qu'on est connecté
+        $_SESSION['is_logged_in'] = true;
+
+        header('Location: accueil.php');
+
+        exit();
+
+    
+   
+}
+
+    else{
+        $errormessage = "Impossible de vous connecter";
+    }
+
+
+}
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
-    <?php 
-      include 'Header/head.php'
-    ?>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - EhealthRecord</title>
+    <link rel="stylesheet" href="CSS/index.css">
+</head>
 <body>
-    <?php 
-      include 'Header/header.php'
-    ?>
+    <div class="login-container">
+        <h1>EhealthRecord</h1>
+        <h2>Connexion</h2>
+        <form action="" method="POST">
+            <div class="input-group">
+                <label for="username">Email:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Mot de passe:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
-    <section class="dashboard">
-        <div class="top">
-          <h2>Dashboard</h2>
-     
-          <div class="icon_top">
-            <input type="checkbox" id="switch-mode" hidden>
-			      <label for="switch-mode" class="switch-mode"></label>
-            <i class="uil uil-bell"></i>
-            <span class="num">8</span>
-            <i class="uil uil-user-circle"></i>
-          </div>
-        </div>
-        <div class="conteneur">
-            <div class="main-content">
-                <div class="sales-container">
-                    <div class="sales-box" onclick="window.location.href='liste_des_examens_demander.php'" style="cursor: pointer;">
-                        <div class="icon"><i class="uil uil-user-md"></i></div>
-                        <h3>Examen demander</h3>
-                        <p class="time">Dernières 24 heures</p>
-                    </div>
-
-                    
-                      <div class="sales-box" onclick="window.location.href='consultation.php'" style="cursor: pointer;">
-                        <div class="icon"><i class="uil uil-medkit"></i></div>
-                        <h3>Patients enregistrer</h3>
-                        <p class="time">Dernières 24 heures</p>
-          
-                      </div>
-                    
-                      <div class="sales-box" onclick="window.location.href='paiementEnregistrer.php'" style="cursor: pointer;">
-                        <div class="icon"><i class="uil uil-bill"></i></div>
-                        <h3>Liste paiement</h3>
-                        <p class="time">Dernières 24 heures</p>
-      
-                      </div>
-                    
-                      <div class="sales-box" onclick="window.location.href='hospitalisation.php'" style="cursor: pointer;">
-                        <div class="icon"><i class="uil uil-bed"></i></div>
-                        <h3>Hospitalisation</h3>
-                        <p class="time">Dernières 24 heures</p>
-                      </div>
-                </div>
+            <p id="errormessage" style="color: red;"><?= $errormessage; ?></p>
             
-              </div>
-                <div class="dashboard-section">
-                    <div class="orders">
-                        <h3>Les paiements récents</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                  <th>Code patient</th>
-                                    <th>Nom patient</th>
-                                    <th>Postnom patient</th>
-                                    <th>Prenom patient</th>
-                                    <th>Montant</th>
-                                    <th>Mode paiement</th>
-                                    <th>Motif</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-
-                                include('TRAITEMENT/viewhistorique.php');
-                                while ($ligne = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($ligne['id_patient']) ?></td>
-                                        <td><?= htmlspecialchars($ligne['nom']) ?></td>
-                                        <td><?= htmlspecialchars($ligne['postnom']) ?></td>
-                                        <td><?= htmlspecialchars($ligne['prenom']) ?></td>
-                                        <td><?= htmlspecialchars($ligne['montant']) ?>$</td>
-                                        <td class="status delivered"><?= htmlspecialchars($ligne['lib_Modepaiement']) ?></td>  
-                                        <td><?= htmlspecialchars($ligne['lib_Motifpaie']) ?></td>
-                                    </tr>
-                                <?php
-                                }
-                                ?>                              
-                            </tbody>
-                        </table>
-                        <button class="view-all" onclick="window.location.href='paiementEnregistrer.php'" style="cursor: pointer;"><i class="uil uil-eye"></i></button>
-                    </div>
-                </div>
-              
-        </div>
-     </section>   
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.11.2/toastify.min.js"></script>
-    <script src="JS/script.js"></script>
-    <script>
-        // Fonction pour ouvrir le modal
-        function openModal() {
-            document.getElementById("paiementModal").style.display = "flex";
-        }
-
-        // Fonction pour fermer le modal
-        function closeModal() {
-            document.getElementById("paiementModal").style.display = "none";
-        }
-
-        // Fermer le modal si on clique à l'extérieur
-        window.onclick = function(event) {
-            let modal = document.getElementById("paiementModal");
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
+            <button type="submit" name="submit">Connexion</button>
+           
+        </form>
+    </div>
 </body>
 </html>
