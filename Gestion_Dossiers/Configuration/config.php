@@ -1,8 +1,8 @@
 <?php 
    $host = 'localhost';
    $dbname = 'gestion_dossiers';
-   $user = 'root';
-   $password = '';
+   $user = 'hosto';
+   $password = 'wynnrckr';
    
    try {
        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);

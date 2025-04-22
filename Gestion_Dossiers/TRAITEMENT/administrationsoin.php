@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         include('../Configuration/config.php');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $sql = "INSERT INTO AdministrationSoin (dateheure_soin, type_soin, description_detailler, dure_soin,observation,id_patient,id_agent)
+        $sql = "INSERT INTO administrationsoin (dateheure_soin, type_soin, description_detailler, dure_soin,observation,id_patient,id_agent)
                 VALUES (:date_heure_soin, :type_soin, :description_soin, :duree_soin, :observations,:patient_id, 1)";
 
         $stmt = $pdo->prepare($sql);

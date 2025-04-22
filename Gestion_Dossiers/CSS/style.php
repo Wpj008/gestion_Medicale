@@ -1208,4 +1208,13 @@ body.dark .sales-box{
         background-color: #ddd;
         color:#000;
     }
+    tbody tr td a{
+        text-decoration:none;
+        color:var(--text-color);
+    }
+    tbody tr td a:hover{
+        text-decoration:none;
+        color:var(--text-color);
+        text-decoration-line: underline;
+    }
 </style>

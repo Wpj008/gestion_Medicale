@@ -2,7 +2,7 @@
  session_start();
  
 if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
-    header('Location: index.php');  // Rediriger vers la page de connexion
+    header('Location: login.php');  // Rediriger vers la page de connexion
     exit;  // Arrêter l'exécution des scripts suivants
     
 }
@@ -30,7 +30,9 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
 			      <label for="switch-mode" class="switch-mode"></label>
             <i class="uil uil-bell"></i>
             <span class="num">8</span>
-            <i class="uil uil-user-circle"></i>
+           <a href="/profil.php">
+           <i class="uil uil-user-circle"></i>
+           </a>
           </div>
         </div>
         <div class="conteneur">

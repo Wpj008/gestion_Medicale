@@ -26,14 +26,14 @@ if (isset($_POST['query']) && !empty(trim($_POST['query']))) {
     if ($results) {
         foreach ($results as $ligne) {
             echo "<tr>
-                    <td>" . htmlspecialchars($ligne['id_patient']) . "</td>
-                    <td>" . htmlspecialchars($ligne['nom']) . "</td>
-                    <td>" . htmlspecialchars($ligne['postnom']) . "</td>
-                    <td>" . htmlspecialchars($ligne['prenom']) . "</td>
-                    <td>" . htmlspecialchars($ligne['sexe']) . "</td>
-                    <td><a href='#'><i class='uil uil-trash'></i></a></td>
-                    <td><a href='#'><i class='uil uil-edit'></i></a></td>
-                </tr>";
+            <td><a href=\"dossier.php?id=" . $ligne['id_patient'] . "\">" . htmlspecialchars($ligne['id_patient']) . "</a></td>
+            <td><a href=\"dossier.php?id=" . $ligne['id_patient'] . "\">" . htmlspecialchars($ligne['nom']) . "</a></td>
+            <td>" . htmlspecialchars($ligne['postnom']) . "</td>
+            <td>" . htmlspecialchars($ligne['prenom']) . "</td>
+            <td>" . htmlspecialchars($ligne['sexe']) . "</td>
+            <td><a href='#'><i class='uil uil-trash'></i></a></td>
+            <td><a href='#'><i class='uil uil-edit'></i></a></td>
+        </tr>";
         }
     } else {
         echo "<tr><td colspan='9'>Aucun résultat trouvé</td></tr>";

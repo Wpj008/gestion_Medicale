@@ -1,4 +1,3 @@
-
 <aside class="sidebar">
     <header class="sidebar-header">
       <h1>MENU</h1>
@@ -15,6 +14,28 @@
           </a>
           <ul class="dropdown-menu">
             <li class="nav-item"><a class="nav-link dropdown-title">Dashboard</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="liste_dossiers.php" class="nav-link">
+            <span class="icon material-symbols-rounded">folder</span>
+            <span class="nav-label">Dossiers</span>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="nav-item"><a class="nav-link dropdown-title">Dossiers</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown-container">
+          <a href="#" class="nav-link dropdown-toggle">
+            <span class="icon material-symbols-rounded">save_clock</span>
+            <span class="nav-label">Reception</span>
+            <span class="dropdown-icon icon material-symbols-rounded">keyboard_arrow_down</span>
+          </a>
+       
+          <ul class="dropdown-menu">
+            <li class="nav-item"><a class="nav-link dropdown-title">Reception</a></li>
+            <li class="nav-item"><a href="reception.php" class="nav-link dropdown-link">Nouveau patient</a></li>
+            <li class="nav-item"><a href="consultation.php" class="nav-link dropdown-link">Liste de patient</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown-container">
@@ -72,6 +93,7 @@
             <li class="nav-item"><a href="ResultatExamLabo.php" class="nav-link dropdown-link">Resultat des examens</a></li>
             <li class="nav-item"><a href="hospitaliser.php" class="nav-link dropdown-link">Hospitaliser le patient</a></li>
             <li class="nav-item"><a href="liste_des_examens_demander.php" class="nav-link dropdown-link">Liste d'exam demandé</a></li>
+            <li class="nav-item"><a href="liste_dossiers.php" class="nav-link dropdown-link">Liste des dossiers</a></li>
             
           </ul>
         </li>
@@ -89,19 +111,34 @@
               <li class="nav-item"><a href="examen_demander.php" class="nav-link dropdown-link">Examens demandés</a></li>
             </ul>
           </li>
+          <li class="nav-item dropdown-container">
+            <a href="#" class="nav-link dropdown-toggle">
+              <!-- <span class="icon material-symbols-rounded">labs</span> -->
+              <span class="nav-label">Admin</span>
+              <span class="dropdown-icon icon material-symbols-rounded">keyboard_arrow_down</span>
+            </a>
+         
+            <ul class="dropdown-menu">
+              <li class="nav-item"><a class="nav-link dropdown-title">Admin</a></li>
+              <li class="nav-item"><a href="ajouter_agent.php" class="nav-link dropdown-link">Ajout agent</a></li>
+              <li class="nav-item"><a href="liste_agents.php" class="nav-link dropdown-link">Liste agents</a></li>
+            
+            </ul>
+          </li>
+          
       </ul>
       <ul class="nav-list secondary-nav">
         <li class="nav-item">
-          <a href="utilisateur.php" class="nav-link">
+          <!-- <a href="utilisateur.php" class="nav-link">
             <span class="material-symbols-rounded">settings</span>
             <span class="nav-label">parametre</span>
-          </a>
+          </a> -->
           <ul class="dropdown-menu">
             <li class="nav-item"><a class="nav-link dropdown-title">Mode sombre</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <a href="logout.php" class="nav-link">
+          <a href="TRAITEMENT/logout.php" class="nav-link">
             <span class="material-symbols-rounded">logout</span>
             <span class="nav-label">Se déconnecter</span>
           </a>
@@ -111,4 +148,4 @@
         </li>
       </ul>
     </nav>
-  </aside>
+</aside>

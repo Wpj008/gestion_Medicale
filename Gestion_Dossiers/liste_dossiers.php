@@ -11,7 +11,7 @@
 
     <section class="dashboard">
       <div class="top">
-        <h2>Reception</h2>
+        <h2>Dossiers</h2>
         <div class="icon_top">
           <input type="checkbox" id="switch-mode" hidden>
           <label for="switch-mode" class="switch-mode"></label>
@@ -21,7 +21,7 @@
         <div class="conteneur">
             <div class="preview">
                 <div class="search-box">
-                    <h3 class="main-title">La liste des patients enregistrer</h3>
+                    <h3 class="main-title">La liste des dossiers des patients</h3>
                 </div>
                 <div class="search-box2">
                     <i class="uil uil-search"></i>
@@ -50,7 +50,7 @@
                             ?>
                                 <tr>
                                 <td><a href="dossier.php?id=<?= $ligne['id_patient'] ?>"><?= htmlspecialchars($ligne['id_patient']) ?></a></td>
-                                    <td><a href="dossier.php?id=<?= $ligne['id_patient'] ?>"><?= htmlspecialchars($ligne['nom']) ?></a></td>
+                                <td><a href="dossier.php?id=<?= $ligne['id_patient'] ?>"><?= htmlspecialchars($ligne['nom']) ?></a></td>
 
                                     <td><?= htmlspecialchars($ligne['postnom']) ?></td>
                                     <td><?= htmlspecialchars($ligne['prenom']) ?></td>
