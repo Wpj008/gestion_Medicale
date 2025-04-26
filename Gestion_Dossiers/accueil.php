@@ -30,7 +30,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
 			      <label for="switch-mode" class="switch-mode"></label>
             <i class="uil uil-bell"></i>
             <span class="num">8</span>
-           <a href="/profil.php">
+           <a href="/gestion_dossiers/profil.php">
            <i class="uil uil-user-circle"></i>
            </a>
           </div>

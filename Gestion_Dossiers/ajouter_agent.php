@@ -69,16 +69,8 @@
                     </div>
                 </div>
                 
-                <div class="colonne">
-                    <div class="input-box">
-                        <label for="password">Mot de passe</label>
-                        <input type="password" name="password" placeholder="Créez un mot de passe" required>
-                    </div>
                     
-                    <div class="input-box">
-                        <label for="password_confirm">Confirmer le mot de passe</label>
-                        <input type="password" name="password_confirm" placeholder="Confirmez le mot de passe" required>
-                    </div>
+                    
                 </div>
                 
                 <div class="colonne">

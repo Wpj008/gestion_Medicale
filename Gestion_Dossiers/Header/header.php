@@ -138,7 +138,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a href="TRAITEMENT/logout.php" class="nav-link">
+          <a href="logout.php" class="nav-link">
             <span class="material-symbols-rounded">logout</span>
             <span class="nav-label">Se déconnecter</span>
           </a>

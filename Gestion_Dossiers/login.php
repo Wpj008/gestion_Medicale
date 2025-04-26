@@ -1,72 +1,65 @@
 <?php 
 include 'Configuration/config.php';
 
-
 $errormessage = "";
 
-
-if ($_SERVER["REQUEST_METHOD"] == "POST"  && isset($_POST['submit'])) {
-
-    
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $email = $_POST['username'];
+         $password = $_POST['password'];
     
-    $password = htmlspecialchars($_POST['password']);
+             $query = $pdo->prepare("SELECT * FROM agent WHERE AdresseMail = :AdresseMail");
+            $query->bindParam(':AdresseMail', $email);
+         $query->execute();
     
-    
-    //recupère tous les infos users
+        $results = $query->fetch(); 
 
-    $query = $pdo->prepare("SELECT * FROM agent WHERE  AdresseMail = :AdresseMail" );
-       
-    $query->bindParam(':AdresseMail', $email);
-    $query->execute();
-     
-    
-    $results = $query->fetch(); 
+         //Vérification du mot de passe
+        if (password_verify($password, $results['mot_de_passe'])) {
 
- 
-    //verifie si le mdp saisi === mdp  dans la bdd
+            if($password == '12345678'){
 
-    if($results){
+                session_start();
 
-        session_start();
-        $_SESSION['id_agent'] = $results['id_agent'];
-        $_SESSION['nom'] = $results['nom'];
-        $_SESSION['postnom'] = $results['postnom'];
-        $_SESSION['prenom'] = $results['prenom'];
-        $_SESSION['AdresseMail'] = $results['AdresseMail'];
-        $_SESSION['id_specialite'] = $results['id_specialite'];
-        $_SESSION['id_fonction'] = $results['id_fonction'];
-        
-        //pour verifier dans les autres pages qu'on est connecté
-        $_SESSION['is_logged_in'] = true;
+                $query = $pdo->prepare("SELECT * FROM agent WHERE AdresseMail = :AdresseMail");
+                    $query->bindParam(':AdresseMail', $email);
+                         $query->execute();
+                             $results = $query->fetch();
 
-        header('Location: accueil.php');
+                    $_SESSION['id_agent'] = $results['id_agent'];
 
-        exit();
+                header('Location: update_password.php');
+                     exit();
+                     }
+            else{
+            session_start();
+            $_SESSION['id_agent'] = $results['id_agent'];
+                 $_SESSION['nom'] = $results['nom'];
+                    $_SESSION['postnom'] = $results['postnom'];
+                         $_SESSION['prenom'] = $results['prenom'];
+                      $_SESSION['AdresseMail'] = $results['AdresseMail'];
+                   $_SESSION['id_specialite'] = $results['id_specialite'];
+                 $_SESSION['id_fonction'] = $results['id_fonction'];
+            $_SESSION['is_logged_in'] = true;
 
-    
-   
+            header('Location: accueil.php');
+            exit();
+          } 
+    }   else {
+            $errormessage = "Mot de passe incorrect";
+        }
+    } else {
+        $errormessage = "Aucun compte trouvé avec cet email";
+   // }
 }
-
-    else{
-        $errormessage = "Impossible de vous connecter";
-    }
-
-
-}
-
-
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="CSS/login.css" rel="stylesheet">
     <title>Connexion - EhealthRecord</title>
-    <link rel="stylesheet" href="CSS/index.css">
 </head>
 <body>
     <div class="login-container">
@@ -75,17 +68,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && isset($_POST['submit'])) {
         <form action="" method="POST">
             <div class="input-group">
                 <label for="username">Email:</label>
-                <input type="text" id="username" name="username" required>
+                <input type="email" id="username" name="username" required>
             </div>
             <div class="input-group">
                 <label for="password">Mot de passe:</label>
                 <input type="password" id="password" name="password" required>
             </div>
 
-            <p id="errormessage" style="color: red;"><?= $errormessage; ?></p>
+            <p id="errormessage"><?= $errormessage; ?></p>
             
             <button type="submit" name="submit">Connexion</button>
-           
         </form>
     </div>
 </body>

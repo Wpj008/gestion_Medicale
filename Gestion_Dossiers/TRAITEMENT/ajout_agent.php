@@ -2,12 +2,7 @@
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Vérification que les mots de passe correspondent
-    if ($_POST['password'] !== $_POST['password_confirm']) {
-        $_SESSION['error_message'] = "Les mots de passe ne correspondent pas";
-        header("Location: ../ajouter_agent.php");
-        exit;
-    }
+
 
     // Récupération des données
     $nom = $_POST['nom'] ?? null;
@@ -17,15 +12,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $AdresseMail = $_POST['AdresseMail'] ?? null;
     $sexe = $_POST['sexe'] ?? null;
     $adresse = $_POST['adresse'] ?? null;
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $mot_de_passe = '12345678';
+    $passwordHash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
     $id_specialite = $_POST['id_specialite'] ?? null;
     $id_fonction = $_POST['id_fonction'] ?? null;
 
     try {
         include('../Configuration/config.php');
         
-        $sql = "INSERT INTO agent (nom, postnom, prenom, telephone, AdresseMail, sexe, adresse, password, id_specialite, id_fonction) 
-                VALUES (:nom, :postnom, :prenom, :telephone, :AdresseMail, :sexe, :adresse, :password, :id_specialite, :id_fonction)";
+        $sql = "INSERT INTO agent (nom, postnom, prenom, telephone, AdresseMail, sexe, adresse, mot_de_passe, id_specialite, id_fonction) 
+                VALUES (:nom, :postnom, :prenom, :telephone, :AdresseMail, :sexe, :adresse, :mot_de_passe, :id_specialite, :id_fonction)";
                 
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':nom', $nom);
@@ -35,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':AdresseMail', $AdresseMail);
         $stmt->bindParam(':sexe', $sexe);
         $stmt->bindParam(':adresse', $adresse);
-        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':mot_de_passe', $passwordHash);
         $stmt->bindParam(':id_specialite', $id_specialite);
         $stmt->bindParam(':id_fonction', $id_fonction);
         
