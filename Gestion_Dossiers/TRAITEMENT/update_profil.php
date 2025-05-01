@@ -5,8 +5,11 @@ include('../Configuration/config.php');
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['id_agent'])) {
     $id_agent = $_SESSION['id_agent'];
     
+
+    header("Location: ../update_password.php");
+exit;
     // Récupération des données du formulaire
-    $data = [
+   /* $data = [
         'prenom' => $_POST['prenom'] ?? '',
         'nom' => $_POST['nom'] ?? '',
         'postnom' => $_POST['postnom'] ?? null,
@@ -35,9 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['id_agent'])) {
         $_SESSION['success_message'] = "Profil mis à jour avec succès";
     } catch (PDOException $e) {
         $_SESSION['error_message'] = "Erreur lors de la mise à jour: " . $e->getMessage();
-    }
+    }*/
 }
 
-header("Location: ../profil.php");
-exit;
+
 ?>
